@@ -1,0 +1,125 @@
+" NeoBundle
+" setup:
+"   git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
+"   git clone https://github.com/Shougo/vimproc ~/.vim/bundle/vimproc
+filetype off
+if has('vim_starting')
+  set runtimepath+=~/.vim/bundle/neobundle.vim
+  call neobundle#rc(expand('~/.vim/bundle/'))
+endif
+
+"----
+NeoBundle 'grep.vim'
+NeoBundle 'neocomplcache'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'unite.vim'
+NeoBundle 'rdark'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/vimproc'
+NeoBundle 'sudo.vim'
+NeoBundle 'ref.vim'
+NeoBundle 'project.tar.gz'
+NeoBundle 'tsukkee/unite-tag'
+NeoBundle 'google.vim'
+NeoBundle 'surround.vim'
+NeoBundle 'gtags.vim'
+NeoBundle 'fugitive.vim'
+NeoBundle 'a.vim'
+NeoBundle 'Indent-Guides'
+NeoBundle 'YankRing.vim'
+NeoBundle 'Lokaltog/vim-powerline'
+NeoBundle 'neco-look'
+NeoBundle 'taka74u9/unite-git'
+NeoBundle 'daisuzu/rainbowcyclone.vim'
+NeoBundle 'Shougo/vimshell'
+NeoBundle 'osyo-manga/shabadou.vim'
+NeoBundle 'osho-manga/vim-watchdogs'
+NeoBundle 'jceb/vim-hier'
+NeoBundle 'dannyob/quickfixstatus'
+"----
+"NeoBundle 'thinca/vim-guicolorscheme'
+"NeoBundle 'vimgdb'
+"NeoBundle 'Gundo'
+
+"====
+" settings for plugins
+
+"----
+" neocomplcache
+"" disable AutoComplePop
+let g:acp_enableAtStartup = 0
+"" use neocomplcache
+let g:neocomplcache_enable_at_startup = 1
+"" auto completion setting
+let g:neocomplcache_auto_completion_start_length = 2
+"" strict popup num
+let g:neocomplcache_max_list = 30
+"" use smartcase
+let g:neocomplcache_enable_smart_case = 1
+"" use camel case completion
+let g:neocomplcache_enable_camel_case_completion = 1
+"" use underbar completion
+let g:neocomplcache_enable_underbar_completion = 1
+"" set minimum syntax keyword length
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+"" define keyword
+if !exists('g:neocomplcache_keyword_patterns')
+  let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns{'default'} = '\h\w*'
+"" path to snippet files
+"
+imap <silent> <C-k> <Plug>(neocomplcache_snippets_expand)
+smap <silent> <C-k> <Plug>(neocomplcache_snippets_expand)
+
+"----
+" solarized.vim
+syntax enable
+set t_Co=256
+set background=dark
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+colorscheme solarized
+
+"----
+" Unite.vim
+" 起動時にインサートモードで開始
+let g:unite_enable_start_insert = 1
+
+" call unite.vim
+nnoremap <silent> <C-g> :<C-u>UniteWithBufferDir -buffer-name=files file file/new<CR>
+nnoremap <silent> <C-t> :<C-u>Unite buffer file_mru git_cached<CR>
+nnoremap <silent> <C-o> :<C-u>Unite outline<CR>
+nnoremap <silent> <C-y> :<C-u>Unite tag<CR>
+" keymapping on unite.vim
+autocmd FileType unite call s:unite_my_settings()
+function! s:unite_my_settings()
+  " 単語単位ではなくパス単位で削除する
+  imap <buffer> <C-w> <Plug>(unite_delete_backward_path)
+  " double tap ESC to exit
+  nmap <silent><buffer> <Esc><Esc> q
+  imap <silent><buffer> <Esc><Esc> <Esc>q
+endfunction
+
+"----
+" quickrun
+silent! nmap <unique> ,r <Plug>(quickrun)
+
+"----
+" powerline
+let g:Powerline_colorscheme='solarized256'
+let g:Powerline_symbles='compatible'
+
+"----
+" fugitive
+nnoremap <Space>gd :<C-u>Gdiff<CR>
+nnoremap <Space>gs :<C-u>Gstatus<CR>
+nnoremap <Space>gl :<C-u>Glog<CR>
+nnoremap <Space>ga :<C-u>Gwrite<CR>
+nnoremap <Space>gc :<C-u>Gcommit<CR>
+nnoremap <Space>gC :<C-u>Git commit --amend<CR>
+nnoremap <Space>gb :<C-u>Gblame<CR>
+

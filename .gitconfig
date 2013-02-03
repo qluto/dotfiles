@@ -1,0 +1,11 @@
+[user]
+  name = qluto
+  email = nocturnal.qluto@gmail.com
+[color]
+  ui = auto
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+[push]
+  default = upstream

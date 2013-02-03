@@ -1,0 +1,64 @@
+"3.0 (created: 2011/03/06 22:51:04)
+" vim: set ft=vimperator:
+
+"" --------------------------------
+"" color settings
+"colorscheme sweets_snaka
+colorscheme hoge
+
+"" --------------------------------
+"" general
+
+set gui=noaddons,nomenu
+set hlsearch
+set visualbell
+highlight Bell display:none
+
+set complete=btl
+
+" ページの入力欄にフォーカスを奪われないようにする
+set focuscontent
+
+set titlestring=Firefox
+set visualbell
+
+
+"" --------------------------------
+"" key mapping
+cmap <C-n> <Tab>
+cmap <C-p> <S-Tab>
+map <C-c> :echo<Space>Yank!<Return>Y
+map ,s :so<Space>~/.vimperatorrc<Return>
+
+nnoremap j 3j
+nnoremap k 3k
+nnoremap h <C-p>
+nnoremap l <C-n>
+noremap d D
+noremap D d
+
+set hintchars=ifjklasdweuocvbnm
+
+
+"" --------------------------------
+"" key mapping
+
+"" plugins
+
+" readitlater.js
+let g:readitlater_api_key = "4aoT1a34g5c52lXzThd334ed0Zp1y1e0"
+let g:readitlater_open_as_read = 1
+
+" copy.js
+map ,c :copy<Space>"%TITLE%"<Space>-<Space>%URL%<Return><Return>
+
+" twitter.js
+map ,t :twitter<Space>
+
+" multirequester.js
+noremap ,a :mr alc 
+vmap <silent> <C-a> y<ESC><ESC>:mr alc <C-V><CR>
+
+"" --------------------------------
+"" local settings
+source! /Users/qluto/.vimperatorrc.local
