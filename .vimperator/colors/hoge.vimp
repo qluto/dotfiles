@@ -1,0 +1,106 @@
+highlight Bell display:none
+highlight CmdLine color:  LightYellow;  background: #000; font-size: 12pt;
+highlight CompDesc color: Pink;
+highlight CompItem[selected] color: DeepPink;  background: Black;
+highlight CompTitle color:  magenta; background: #222; font-weight: bold;
+highlight ErrorMsg color: white;  background: red;  font-size: 12pt;
+highlight Function color:  SkyBlue;
+highlight Hint font-family: monospace; font-size: 15px; font-weight: normal; color: lightyellow; background-color: black; border-color: ButtonShadow; border-width: 0px; border-style: solid; padding: 0px 5px 0px 5px; 
+highlight HintActive background-color: hotpink; color: white;
+highlight HintElem background-color: pink; color: black;
+highlight Indicator color:  DodgerBlue;
+highlight InfoMsg color:  LightYellow;  background: #333; font-size: 12pt;
+highlight LineNr color:  DeepPink; background: #333; font-size: 12pt;
+highlight ModeMsg color:  LightYellow;  background: #777; font-size: 12pt;
+highlight MoreMsg color:  LimeGreen; background: #333;
+highlight NonText background: #333;
+highlight Normal color:  LightYellow;  background: #000; font-size: 12pt; position: relative; z-index: 99999; opacity: 0.8;
+highlight Null color: CornflowerBlue;
+highlight Number color:  Orchid;
+highlight Object color: Khaki;
+highlight Question color: Yellow;  background:#333;  font-size: 12pt;
+highlight StatusLine color:  CornflowerBlue; background: #000; font-weight: normal; font-size: 12pt;
+highlight String color:  Orchid;
+highlight TabNumber color: white; font-weight: bold; font-size:10pt;
+highlight Tag color: CornflowerBlue;
+highlight Title color:  white;
+highlight URL color:  LightGreen;
+highlight WarningMsg color: DeepPink;  background:#333;  font-size: 12pt;
+
+style! -name=tab chrome://* <<EOF
+#content { background-color: #444 !important;} /* tabbar */
+.tabs-alltabs-button { padding: 0 !important; }
+.tabs-container { height: 20px; border-bottom: 1px solid #000; }
+.tabs-container > stack { display:none; } /* remove tab selection menu */
+.tabbrowser-tab {
+  -moz-apperance: none !important;
+  padding: 0 0 0 5pt !important; 
+
+  margin-bottom:1pt !important;
+  -moz-border-radius-topleft: 10pt !important;
+  -moz-border-radius-topright: 0 !important;
+  -moz-border-radius-bottomright: 0 !important;
+  -moz-border-radius-bottomleft: 8pt !important;
+
+  font-size:8pt !important;
+  /* font-family: 'メイリオ'; */
+  border: none !important;
+  background-image:none !important;
+  background-color: #ff69b4; !important; 
+  position: relative;
+  z-index: 0;
+}
+.tabbrowser-tab[selected=false] { background: #333 !important; color: LightYellow !important;}
+.tabbrowser-tab[selected=false] > .tab-text { background: #000 !important; color: DeepPink !important;}
+
+.tabbrowser-tab[selected=true] > .tab-text { background: #000 !important; color: DeepPink !important;}
+.tabbrowser-tab[selected=true] { background: #000 !important; color: DeepPink !important;}
+/*
+.tabbrowser-tab[selected=true] > .tab-text { background: #000 !important; color: CornflowerBlue !important;}
+.tabbrowser-tab[selected=true] { background: #000 !important; color: CornflowerBlue !important;}
+*/
+
+.tabbrowser-strip { background: #444 !important; }
+
+/* remove close button */
+.tab-close-button {
+  display: none;
+}
+/* remove new tab button */
+.tabs-newtab-button {
+  display: none !important;
+}
+#new-tab-button {
+  display: none !important;
+}
+.tabs-newtab-button,
+.tabs-alltabs-box,
+.tabs-alltabs-box-animate,
+.tabs-alltabs-button {
+  display: none !important;
+}
+/* splitter */
+.treestyletab-splitter {
+  width: 0 !important;
+}
+.treestyletab-splitter grippy {
+  display: none !important;
+}
+/* set unread tabs style */
+#content tab:not([selected]) {
+background-color: #333 !important; color:CornflowerBlue  !important;
+/*
+background-color: #333 !important; color:Pink  !important;
+*/
+}
+/* change orange firefox button */
+#appmenu-button {
+  background: rgba(50,50,50,0.5) !important;
+  -moz-transition-duration:0.5s!important;
+}
+EOF
+style! -name=statusbar chrome://* <<EOF
+#status-bar statusbarpanel { padding: 0 1px !important; }
+statusbarpanel > * { margin: 0 !important; padding: 0 !important; }
+EOF
+
