@@ -1,112 +1,81 @@
-local fn = vim.fn
+-- Plugin manager: lazy.nvim
+-- 各プラグインの設定は plugin/*.lua にあり、lazy.nvim がプラグイン読み込み後に source する
 
--- Automatically install packer
-local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-if fn.empty(fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = fn.system({
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local out = vim.fn.system({
     "git",
     "clone",
-    "--depth",
-    "1",
-    "https://github.com/wbthomason/packer.nvim",
-    install_path,
+    "--filter=blob:none",
+    "--branch=stable",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
   })
-  print("Installing packer close and reopen Neovim...")
-  vim.cmd([[packadd packer.nvim]])
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+    }, true, {})
+    return
+  end
 end
+vim.opt.rtp:prepend(lazypath)
 
--- Autocommand that reloads neovim whenever you save the plugins.lua file
-vim.cmd([[
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerSync
-  augroup end
-]])
-
--- Use a protected call so we don't error out on first use
-local status_ok, packer = pcall(require, "packer")
-if not status_ok then
-  return
-end
-
--- Have packer use a popup window
-packer.init({
-  display = {
-    open_fn = function()
-      return require("packer.util").float({ border = "rounded" })
-    end,
-  },
-})
-
--- Install your plugins here
-return packer.startup(function(use)
-
-  use({ "wbthomason/packer.nvim" })
-  use({ "nvim-lua/plenary.nvim" }) -- Common utilities
+require("lazy").setup({
+  { "nvim-lua/plenary.nvim" }, -- Common utilities
 
   -- Colorschemes
-  use({ "EdenEast/nightfox.nvim" }) -- Color scheme
+  { "EdenEast/nightfox.nvim", priority = 1000 }, -- Color scheme
 
-  use({
-    'nvim-lualine/lualine.nvim', -- Statusline
-    requires = { 'nvim-tree/nvim-web-devicons', opt = true }
-  })
-  use({ "windwp/nvim-autopairs" }) -- Autopairs, integrates with both cmp and treesitter
-  -- use({ "kyazdani42/nvim-web-devicons" }) -- File icons
-  use({ "akinsho/bufferline.nvim" })
+  {
+    "nvim-lualine/lualine.nvim", -- Statusline
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
+  { "windwp/nvim-autopairs" }, -- Autopairs, integrates with both cmp and treesitter
+  { "akinsho/bufferline.nvim" },
 
   -- cmp plugins
-  use({ "hrsh7th/nvim-cmp" }) -- The completion plugin
-  use({ "hrsh7th/cmp-buffer" }) -- buffer completions
-  use({ "hrsh7th/cmp-path" }) -- path completions
-  use({ "hrsh7th/cmp-cmdline" }) -- cmdline completions
-  use({ "saadparwaiz1/cmp_luasnip" }) -- snippet completions
-  use({ "hrsh7th/cmp-nvim-lsp" })
-  use({ "hrsh7th/cmp-nvim-lua" })
-  use({ "onsails/lspkind-nvim" })
+  { "hrsh7th/nvim-cmp" }, -- The completion plugin
+  { "hrsh7th/cmp-buffer" }, -- buffer completions
+  { "hrsh7th/cmp-path" }, -- path completions
+  { "hrsh7th/cmp-cmdline" }, -- cmdline completions
+  { "saadparwaiz1/cmp_luasnip" }, -- snippet completions
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "hrsh7th/cmp-nvim-lua" },
+  { "onsails/lspkind-nvim" },
 
   -- snippets
-  use({ "L3MON4D3/LuaSnip" }) --snippet engine
+  { "L3MON4D3/LuaSnip" }, --snippet engine
 
   -- LSP
-  use({ "neovim/nvim-lspconfig" }) -- enable LSP
-  use({ "williamboman/nvim-lsp-installer" }) -- simple to use language server installer
-  use({ "jose-elias-alvarez/null-ls.nvim" }) -- for formatters and linters
-  use({ "glepnir/lspsaga.nvim" }) -- LSP UIs
-
-  -- Formatter
-  use({ "MunifTanjim/prettier.nvim" })
+  { "neovim/nvim-lspconfig" }, -- enable LSP
+  { "nvimdev/lspsaga.nvim" }, -- LSP UIs
 
   -- Telescope
-  use({ "nvim-telescope/telescope.nvim" })
+  { "nvim-telescope/telescope.nvim" },
+  { "nvim-telescope/telescope-file-browser.nvim" },
 
   -- Treesitter
-  use({ "nvim-treesitter/nvim-treesitter", { run = ":TSUpdate" } })
-  use({ "nvim-telescope/telescope-file-browser.nvim" })
+  -- master ブランチはアーカイブ済みで Neovim 0.12 と非互換のため main ブランチを使う（main は遅延読み込み非対応）
+  { "nvim-treesitter/nvim-treesitter", branch = "main", lazy = false, build = ":TSUpdate" },
 
   -- VSCode like にする
-  use({ "lukas-reineke/indent-blankline.nvim" })
+  { "lukas-reineke/indent-blankline.nvim" },
 
   -- control im status automatically
-  use({ "brglng/vim-im-select" })
+  { "brglng/vim-im-select" },
 
+  { "windwp/nvim-ts-autotag" },
 
-  use({ "windwp/nvim-ts-autotag" })
-
-  use {
-    "folke/zen-mode.nvim",
-    config = function()
-      require("zen-mode").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
-    end
-  }
-
-  -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
-  if PACKER_BOOTSTRAP then
-    require("packer").sync()
-  end
-end)
+  { "folke/zen-mode.nvim", opts = {} },
+}, {
+  ui = { border = "rounded" },
+  -- 初回インストール画面でも nightfox を使う
+  install = { colorscheme = { "nightfox", "default" } },
+  -- 更新の自動チェックはしない（:Lazy から手動で更新）
+  checker = { enabled = false },
+  change_detection = { notify = false },
+  -- luarocks が必要なプラグインは無いので無効化（checkhealth のエラー回避）
+  rocks = { enabled = false },
+})

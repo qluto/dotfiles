@@ -1,5 +1,5 @@
-local status, nvim_lsp = pcall(require, "lspconfig")
-if not status then
+-- nvim-lspconfig（各サーバーの既定設定）が無ければ何もしない
+if not pcall(require, "lspconfig") then
 	return
 end
 
@@ -72,24 +72,21 @@ protocol.CompletionItemKind = {
 -- Set up completion using nvim_cmp with LSP source
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-nvim_lsp.flow.setup({
+-- require("lspconfig").xxx.setup() は非推奨になったため、Neovim 0.11+ の vim.lsp.config / vim.lsp.enable を使う
+-- （各サーバーの既定設定は nvim-lspconfig の lsp/*.lua が提供する）
+
+-- 全サーバー共通の設定
+vim.lsp.config("*", {
 	on_attach = on_attach,
 	capabilities = capabilities,
 })
 
-nvim_lsp.tsserver.setup({
-	on_attach = on_attach,
+vim.lsp.config("ts_ls", {
 	filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
 	cmd = { "typescript-language-server", "--stdio" },
-	capabilities = capabilities,
 })
 
-nvim_lsp.sourcekit.setup({
-	on_attach = on_attach,
-})
-
-nvim_lsp.lua_ls.setup({
-	on_attach = on_attach,
+vim.lsp.config("lua_ls", {
 	settings = {
 		Lua = {
 			diagnostics = {
@@ -106,26 +103,30 @@ nvim_lsp.lua_ls.setup({
 	},
 })
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-	underline = true,
-	update_in_insert = false,
-	virtual_text = { spacing = 4, prefix = "●" },
-	severity_sort = true,
-})
+vim.lsp.enable({ "ts_ls", "sourcekit", "lua_ls" })
+
+-- flow はインストールされている場合のみ有効化（未インストールだと起動失敗の警告が出るため）
+if vim.fn.executable("flow") == 1 then
+	vim.lsp.enable("flow")
+end
 
 -- Diagnostic symbols in the sign column (gutter)
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+local sign_text = {}
 for type, icon in pairs(signs) do
-	local hl = "DiagnosticSign" .. type
-	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+	sign_text[vim.diagnostic.severity[type:upper()]] = icon
 end
 
 vim.diagnostic.config({
+	underline = true,
+	severity_sort = true,
+	signs = { text = sign_text },
 	virtual_text = {
+		spacing = 4,
 		prefix = "●",
 	},
 	update_in_insert = true,
 	float = {
-		source = "always", -- Or "if_many"
+		source = true, -- Or "if_many"
 	},
 })

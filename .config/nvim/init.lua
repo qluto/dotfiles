@@ -2,5 +2,6 @@ require("base")
 require("autocmds")
 require("options")
 require("keymaps")
-require("colorscheme")
+-- lazy.nvim はプラグイン読み込み後でないと colorscheme が見つからないため plugins を先に読む
 require("plugins")
+require("colorscheme")
